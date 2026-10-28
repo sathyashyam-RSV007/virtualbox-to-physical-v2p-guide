@@ -206,40 +206,10 @@ echo "UUID=$(sudo blkid -s UUID -o value /dev/sda6) /boot/efi vfat umask=0077 0 
 
 ---
 
-## Post-migration checklist
+# 🎉 VM → Physical Migration Complete
 
-- [ ] Ubuntu boots to the login screen
-- [ ] **Network works.** If not, check the interface name with `ip a` and update `/etc/netplan/*.yaml`, then run `sudo netplan apply`.
-- [ ] **Wi-Fi and Bluetooth work** (this is why `linux-firmware` was installed)
-- [ ] **GPU driver.** For NVIDIA graphics: `sudo ubuntu-drivers autoinstall`
-- [ ] **Remove VirtualBox leftovers.** Uninstall guest additions: `sudo apt remove virtualbox-guest-*`
-- [ ] Check disk size: if the laptop disk is bigger, the extra space is unallocated. Extend the root partition and filesystem (for example with GParted, or `growpart` + `resize2fs`).
-- [ ] `lsblk` and `cat /etc/fstab` look correct
-- [ ] Run `sudo update-grub` once more on the laptop
-
----
-
-## Troubleshooting
-
-| Problem | Fix |
-|---|---|
-| Laptop does not see Ubuntu in the boot menu | Enter firmware settings and make sure UEFI boot is enabled. The `--removable` install should appear as the internal disk or "UEFI: disk name". |
-| Secure Boot blocks the boot | Temporarily disable Secure Boot in firmware, boot Ubuntu, then re-install the signed GRUB packages and re-enable it. |
-| Boots to a `grub>` prompt | Boot a live Ubuntu USB, mount the root and EFI partitions, `chroot`, and run `grub-install` and `update-grub` again. |
-| Boot hangs waiting for a device | A mount in `/etc/fstab` does not exist on the laptop. Remove it or add `nofail`. |
-| No network after boot | Interface name changed. Update the netplan file as shown in the checklist. |
-| Rescuezilla cannot see the VM disk or USB | Check that the VirtualBox Extension Pack is installed and the USB 3.0 (xHCI) controller and filter are enabled. |
-| Image will not fit on the USB | Use a larger drive, or shrink the VM's partitions before the backup. |
-
----
-
-## Important notes
-
-- **Adapt the numbers.** Device names (`/dev/sda`), partition numbers and sizes in this guide belong to one specific VM. Always confirm yours with `lsblk` and `parted -l`.
-- **Test before wiping.** If possible, try the restore on a spare disk or laptop first.
-- **Keep the image.** The file on the 64 GB USB is a full backup of your VM, which is also useful for disaster recovery.
-- **Use at your own risk.** Disk operations can destroy data if the wrong disk is selected.
-
+You have officially migrated Ubuntu OS from a VM to physical hardware.
+ 
 ---
 
 ## Tools used
